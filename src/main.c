@@ -40,11 +40,20 @@ int main() {
     unsigned char decrypted[sizeof(plaintext)];
     unsigned char tag[TAG_SIZE];
 
+    //unsigned char ciphertext[] = {0xd7, 0x62, 0x8b, 0xd2, 0x3a, 0x7d, 0x18, 0x0d, 0xf7, 0xd6, 0xf1, 0x2f, 0x20, 0x61, 0x29, 0x0d};
+
     encrypt_chacha20_poly1305(plaintext, sizeof(plaintext), ciphertext, tag);
 
+    printf("Nonce: ")
+    for (size_t i = 0; i < sizeof(nonce); ++i) {
+      printf("%02x ", nonce[i]);
+    }
     printf("Ciphertext: ");
     for (size_t i = 0; i < sizeof(ciphertext); i++) {
         printf("%02x ", ciphertext[i]);
+    }
+    for (size_t i = 0; i < sizeof(tag); i++) {
+      printf("%02x ", tag[i]);
     }
     printf("\n");
 
