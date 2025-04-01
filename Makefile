@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -g
 
 # Paths to wolfSSL
-WOLFSSL_INC = /home/kor/Documents/wolfssl/wolfssl
+WOLFSSL_INC = /home/kor/Documents/wolfssl/
 WOLFSSL_LIB = /home/kor/Documents/wolfssl/src/.libs
 
 # Source and Executable
