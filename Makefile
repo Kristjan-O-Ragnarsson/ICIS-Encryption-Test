@@ -3,11 +3,11 @@ CC = gcc
 CFLAGS = -Wall -g
 
 # Paths to wolfSSL
-WOLFSSL_INC = ./wolfssl
+WOLFSSL_INC = /home/kor/Documents/wolfssl/wolfssl
 WOLFSSL_LIB = /home/kor/Documents/wolfssl/src/.libs
 
 # Source and Executable
-SRC = main.c
+SRC = src/main.c
 OBJ = $(SRC:.c=.o)
 EXEC = ICIS_Encryption
 
