@@ -32,13 +32,18 @@ int decrypt_chacha20_poly1305(const unsigned char *ciphertext, int len,
         ciphertext, len, tag, plaintext
     );
 }
-
+#ifdef __MACH__
 void generate_nonce(unsigned char *nonce) {
-    if (getrandom(nonce, size, 0) != NONCE_SIZE) {
+    arc4random_buf(nonce, NONCE_SIZE);
+}
+#else
+void generate_nonce(unsigned char *nonce) {
+    if (getrandom(nonce, NONCE_SIZE, 0) != NONCE_SIZE) {
         perror("getrandom");
         exit(EXIT_FAILURE);
     }
 }
+#endif
 
 void combine_message(
     const unsigned char *nonce, size_t nonce_len,
