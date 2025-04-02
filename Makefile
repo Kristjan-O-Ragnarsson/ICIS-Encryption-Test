@@ -7,8 +7,8 @@ WOLFSSL_INC = /home/kor/Documents/wolfssl/
 WOLFSSL_LIB = /home/kor/Documents/wolfssl/src/.libs
 
 # Default: Linux system paths
-WOLFSSL_INC_SYSTEM = /usr/include
-WOLFSSL_LIB_SYSTEM = /usr/lib
+WOLFSSL_INC_SYSTEM = /home/kor/Documents/wolfssl/
+WOLFSSL_LIB_SYSTEM = /home/kor/Documents/wolfssl/src/.libs
 
 # Detect macOS and set correct paths
 UNAME_S := $(shell uname -s)
