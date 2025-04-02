@@ -8,9 +8,26 @@
 #include <wolfssl/options.h>
 #include <wolfssl/wolfcrypt/chacha20_poly1305.h>
 
+#ifdef __linux__
+#include <sys/random.h>
+#elif defined(__APPLE__)
+#include <stdlib.h>
+#endif
+
 #define KEY_SIZE 32
 #define NONCE_SIZE 12
 #define TAG_SIZE 16
+
+void generate_nonce(unsigned char *nonce) {
+#ifdef __MACH__
+    arc4random_buf(nonce, NONCE_SIZE);
+#elif defined(__linux__)
+    if (getrandom(nonce, NONCE_SIZE, 0) != NONCE_SIZE) {
+        perror("getrandom");
+        exit(EXIT_FAILURE);
+    }
+#endif
+}
 
 const unsigned char key[KEY_SIZE] = { /* 32-byte key */ };
 unsigned char nonce[NONCE_SIZE] = { /* 12-byte nonce */ };
@@ -32,18 +49,6 @@ int decrypt_chacha20_poly1305(const unsigned char *ciphertext, int len,
         ciphertext, len, tag, plaintext
     );
 }
-#ifdef __MACH__
-void generate_nonce(unsigned char *nonce) {
-    arc4random_buf(nonce, NONCE_SIZE);
-}
-#else
-void generate_nonce(unsigned char *nonce) {
-    if (getrandom(nonce, NONCE_SIZE, 0) != NONCE_SIZE) {
-        perror("getrandom");
-        exit(EXIT_FAILURE);
-    }
-}
-#endif
 
 void combine_message(
     const unsigned char *nonce, size_t nonce_len,
