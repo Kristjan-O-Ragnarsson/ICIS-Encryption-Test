@@ -113,19 +113,28 @@ void split_message(
 
 
 int main() {
-    const unsigned char plaintext[] = "Hello, wolfSSL!";
-    unsigned char ciphertext[sizeof(plaintext)];
-    unsigned char decrypted[sizeof(plaintext)];
+    //const unsigned char plaintext[] = "Hello, wolfSSL!";
+    char buffer[1024];
+	const unsigned char *plaintext;
     unsigned char tag[TAG_SIZE];
     unsigned char *message;
     size_t message_len;
+    size_t plaintext_len = 0;
 
     generate_nonce(nonce);
 
     //unsigned char ciphertext[] = {0xd7, 0x62, 0x8b, 0xd2, 0x3a, 0x7d, 0x18, 0x0d, 0xf7, 0xd6, 0xf1, 0x2f, 0x20, 0x61, 0x29, 0x0d};
+	if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+          perror("fgets failed");
+	} else{
+          plaintext = (const unsigned char *)buffer;
+          plaintext_len = strlen(buffer);
+    }
+    unsigned char ciphertext[plaintext_len];
+    unsigned char decrypted[plaintext_len];
 
-    encrypt_chacha20_poly1305(plaintext, sizeof(plaintext), ciphertext, tag);
-
+    encrypt_chacha20_poly1305(plaintext, plaintext_len, ciphertext, tag);
+	/*
     printf("Nonce: ");
     for (size_t i = 0; i < sizeof(nonce); ++i) {
       printf("%02x ", nonce[i]);
@@ -139,20 +148,21 @@ int main() {
       printf("%02x ", tag[i]);
     }
     printf("\n");
-
+	*/
     combine_message(nonce, sizeof(nonce), ciphertext, sizeof(plaintext), tag, sizeof(tag), &message, &message_len);
+    /*
     printf("Message: ");
     for (size_t i = 0; i < message_len; i++) {
       printf("%02x ", message[i]);
-    }
+    }*/
 
-    printf("\n");
+    //printf("\n");
     unsigned char *tag_t = NULL;
     unsigned char *nonce_t = NULL;
     unsigned char *ciphertext_t = NULL;
     size_t chipertext_len_t;
     split_message(message, message_len, &nonce_t, &ciphertext_t, &chipertext_len_t, &tag_t);
-
+/*
     printf("Nonce: ");
     for (size_t i = 0; i < sizeof(nonce); ++i) {
         printf("%02x ", nonce[i]);
@@ -165,7 +175,7 @@ int main() {
     for (size_t i = 0; i < sizeof(tag); i++) {
         printf("%02x ", tag[i]);
     }
-    printf("\n");
+    printf("\n");*/
 
     if (decrypt_chacha20_poly1305(ciphertext, sizeof(ciphertext), decrypted, tag) == 0) {
         printf("Decrypted: %s\n", decrypted);
