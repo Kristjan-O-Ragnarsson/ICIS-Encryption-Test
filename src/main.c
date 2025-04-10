@@ -100,6 +100,8 @@ void split_message(
     memcpy(*ciphertext, input + NONCE_SIZE, *ciphertext_len);
 
 
+
+
     *tag = malloc(TAG_SIZE);
     if (!*tag) {
         perror("malloc failed");
@@ -127,14 +129,20 @@ int main() {
 	if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
           perror("fgets failed");
 	} else{
-          plaintext = (const unsigned char *)buffer;
           plaintext_len = strlen(buffer);
+          #ifdef __MACH__
+          printf("plaintext length: %zu\n", plaintext_len);
+          #endif
+          buffer[plaintext_len] = '\0';
+          plaintext = (const unsigned char *)buffer;
+
     }
+    fprintf(stderr, "plaintext is %s\n", plaintext);
     unsigned char ciphertext[plaintext_len];
     unsigned char decrypted[plaintext_len];
 
     encrypt_chacha20_poly1305(plaintext, plaintext_len, ciphertext, tag);
-	/*
+	#ifdef __MACH__
     printf("Nonce: ");
     for (size_t i = 0; i < sizeof(nonce); ++i) {
       printf("%02x ", nonce[i]);
@@ -148,21 +156,26 @@ int main() {
       printf("%02x ", tag[i]);
     }
     printf("\n");
-	*/
+	#endif
+
     combine_message(nonce, sizeof(nonce), ciphertext, sizeof(plaintext), tag, sizeof(tag), &message, &message_len);
-    /*
+
+#ifdef __MACH__
     printf("Message: ");
     for (size_t i = 0; i < message_len; i++) {
       printf("%02x ", message[i]);
-    }*/
+    }
 
-    //printf("\n");
+    printf("\n");
+#endif
+
     unsigned char *tag_t = NULL;
     unsigned char *nonce_t = NULL;
     unsigned char *ciphertext_t = NULL;
     size_t chipertext_len_t;
     split_message(message, message_len, &nonce_t, &ciphertext_t, &chipertext_len_t, &tag_t);
-/*
+
+#ifdef __MACH__
     printf("Nonce: ");
     for (size_t i = 0; i < sizeof(nonce); ++i) {
         printf("%02x ", nonce[i]);
@@ -175,7 +188,8 @@ int main() {
     for (size_t i = 0; i < sizeof(tag); i++) {
         printf("%02x ", tag[i]);
     }
-    printf("\n");*/
+    printf("\n");
+#endif
 
     if (decrypt_chacha20_poly1305(ciphertext, sizeof(ciphertext), decrypted, tag) == 0) {
         printf("Decrypted: %s\n", decrypted);
