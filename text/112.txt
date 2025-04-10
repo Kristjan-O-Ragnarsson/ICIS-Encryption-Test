@@ -1,0 +1,1 @@
+This plaintext is intended for encryption testing in academic environments and should contain sensitive content.
