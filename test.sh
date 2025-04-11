@@ -17,7 +17,7 @@ mkdir "results"
 
 echo "Encryption & Decryption"
 for i in {28,56,112,224}; do
-  file="results/$i/$results"
+  file="./results/$i/$results"
   echo "Plaintext: $i Byte"
   echo "Encryption_Decryption" >> "$file"
   mkdir "results/$i"
