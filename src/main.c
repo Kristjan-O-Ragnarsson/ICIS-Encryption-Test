@@ -5,8 +5,10 @@
 #include "main.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <wolfssl/options.h>
 #include <wolfssl/wolfcrypt/chacha20_poly1305.h>
+
 
 #ifdef __linux__
 #include <sys/random.h>
@@ -122,7 +124,9 @@ int main() {
     unsigned char *message;
     size_t message_len;
     size_t plaintext_len = 0;
+    struct timespec start, end, start_decrypt, end_encrypt;
 
+    timespec_get(&start, TIME_UTC);
     generate_nonce(nonce);
 
     //unsigned char ciphertext[] = {0xd7, 0x62, 0x8b, 0xd2, 0x3a, 0x7d, 0x18, 0x0d, 0xf7, 0xd6, 0xf1, 0x2f, 0x20, 0x61, 0x29, 0x0d};
@@ -157,9 +161,9 @@ int main() {
     }
     printf("\n");
 	#endif
-
+	timespec_get(&start_decrypt, TIME_UTC);
     combine_message(nonce, sizeof(nonce), ciphertext, sizeof(plaintext), tag, sizeof(tag), &message, &message_len);
-
+	timespec_get(&end_encrypt, TIME_UTC);
 #ifdef __MACH__
     printf("Message: ");
     for (size_t i = 0; i < message_len; i++) {
@@ -196,6 +200,10 @@ int main() {
     } else {
         printf("Decryption failed!\n");
     }
+	timespec_get(&end, TIME_UTC);
+    printf("Encrypt/Decrytp time: %ld\n", end.tv_nsec - start.tv_nsec);
+    printf("Encrypt time: %ld\n", end_encrypt.tv_nsec - start.tv_nsec);
+    printf("Decrypt time: %ld\n", end.tv_nsec - start_decrypt.tv_nsec);
 
     return 0;
 }
