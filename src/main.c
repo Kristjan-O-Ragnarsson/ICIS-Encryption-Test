@@ -124,10 +124,12 @@ int main() {
     unsigned char *message;
     size_t message_len;
     size_t plaintext_len = 0;
-    struct timespec start, end, start_decrypt, end_encrypt;
+    struct timespec start, end, start_decrypt, end_encrypt, end_random;
 
     timespec_get(&start, TIME_UTC);
     generate_nonce(nonce);
+
+    timespec_get(&end_random, TIME_UTC);
 
     //unsigned char ciphertext[] = {0xd7, 0x62, 0x8b, 0xd2, 0x3a, 0x7d, 0x18, 0x0d, 0xf7, 0xd6, 0xf1, 0x2f, 0x20, 0x61, 0x29, 0x0d};
 	if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
@@ -201,8 +203,9 @@ int main() {
         printf("Decryption failed!\n");
     }
 	timespec_get(&end, TIME_UTC);
-    printf("Encrypt/Decrytp time: %ld\n", end.tv_nsec - start.tv_nsec);
-    printf("Encrypt time: %ld\n", end_encrypt.tv_nsec - start.tv_nsec);
+    printf("Encrypt/Decrytp/Random time: %ld\n", end.tv_nsec - start.tv_nsec);
+    printf("Random time: %ld\n", end_random.tv_nsec - start.tv_nsec);
+    printf("Encrypt time: %ld\n", end_encrypt.tv_nsec - end_random.tv_nsec);
     printf("Decrypt time: %ld\n", end.tv_nsec - start_decrypt.tv_nsec);
 
     return 0;
