@@ -13,19 +13,19 @@ else
 fi
 
 echo "Perf Statistics"
-mkdir "results"
+#mkdir "results"
 
 echo "Encryption & Decryption"
 for i in {28,56,112,224}; do
-  file="./results/$i/$results"
+  #file="./results/$i/$results"
   echo "Plaintext: $i Byte"
-  echo "Encryption_Decryption" >> "$file"
+  #echo "Encryption_Decryption" >> "$file"
   mkdir "results/$i"
-  OUTPUT="$(perf stat ./$en_bin < ./text/28.txt)"
-  $OUTPUT >> "$file"
-  $OUTPUT | grep "task-clock"
+  #OUTPUT="$(perf stat ./$en_bin < ./text/28.txt)"
+  perf stat ./$en_bin < ./text/28.txt
+  #$OUTPUT >> "$file"
+  #$OUTPUT | grep "task-clock"
 done
-
 
 
 #echo "28 Byte Plaintext Encryption and Decryption" >> $results
