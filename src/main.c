@@ -37,7 +37,7 @@ const unsigned char aad[] = "Example AAD";
 
 
 void encrypt_chacha20_poly1305(const unsigned char *plaintext, int len,
-                                unsigned char *ciphertext, unsigned char *tag) {
+                                unsigned char *ciphertext, unsigned char *tag, unsigned char *nonce) {
     wc_ChaCha20Poly1305_Encrypt(
         key, nonce, aad, strlen((char *)aad),
         plaintext, len, ciphertext, tag
@@ -45,7 +45,7 @@ void encrypt_chacha20_poly1305(const unsigned char *plaintext, int len,
 }
 
 int decrypt_chacha20_poly1305(const unsigned char *ciphertext, int len,
-                              unsigned char *plaintext, const unsigned char *tag) {
+                              unsigned char *plaintext, const unsigned char *tag, unsigned char *nonce) {
     return wc_ChaCha20Poly1305_Decrypt(
         key, nonce, aad, strlen((char *)aad),
         ciphertext, len, tag, plaintext
@@ -147,29 +147,68 @@ int main() {
     unsigned char ciphertext[plaintext_len];
     unsigned char decrypted[plaintext_len];
 
-    encrypt_chacha20_poly1305(plaintext, plaintext_len, ciphertext, tag);
+    encrypt_chacha20_poly1305(plaintext, plaintext_len, ciphertext, tag, nonce);
 	#ifdef __MACH__
     printf("Nonce: ");
     for (size_t i = 0; i < sizeof(nonce); ++i) {
       printf("%02x ", nonce[i]);
     }
-    printf("Ciphertext: ");
+    printf("\nCiphertext: ");
     for (size_t i = 0; i < sizeof(ciphertext); i++) {
         printf("%02x ", ciphertext[i]);
     }
-
+	printf("\nTag: ");
     for (size_t i = 0; i < sizeof(tag); i++) {
       printf("%02x ", tag[i]);
     }
     printf("\n");
 	#endif
 	timespec_get(&start_decrypt, TIME_UTC);
-    combine_message(nonce, sizeof(nonce), ciphertext, sizeof(plaintext), tag, sizeof(tag), &message, &message_len);
+    combine_message(nonce, sizeof(nonce), ciphertext, plaintext_len, tag, sizeof(tag), &message, &message_len);
 	timespec_get(&end_encrypt, TIME_UTC);
+	char arr[60];
+    sprintf(arr, "./text/%zu.bin", plaintext_len);
+    /*
+    FILE *f = fopen(arr, "ab");  // "ab" = append binary
+	if (!f) {
+    	perror("fopen failed");
+    	exit(1);
+	}
+
+	size_t written = fwrite(message, 1, message_len, f);
+	if (written != message_len) {
+    	perror("fwrite failed");
+	}
+
+	fclose(f);*/
+
+
+    char buffer_two[1024];
+    const unsigned char *data;
+    //size_t ciphertext_len = 0;
+
+   FILE *file = fopen(arr, "rb");
+    if (!file) {
+        perror("Failed to open file");
+        return 1;
+    }
+    size_t bytes_read = fread(buffer_two, 1, sizeof(buffer_two), file);
+    fclose(file);
+   	buffer_two[bytes_read] = '\0';
+    data = (const unsigned char *)buffer_two;
+
+
+
 #ifdef __MACH__
     printf("Message: ");
     for (size_t i = 0; i < message_len; i++) {
       printf("%02x ", message[i]);
+    }
+
+    printf("\n");
+    printf("Data: ");
+    for (size_t i = 0; i < message_len; i++) {
+      printf("%02x ", data[i]);
     }
 
     printf("\n");
@@ -179,25 +218,25 @@ int main() {
     unsigned char *nonce_t = NULL;
     unsigned char *ciphertext_t = NULL;
     size_t chipertext_len_t;
-    split_message(message, message_len, &nonce_t, &ciphertext_t, &chipertext_len_t, &tag_t);
+    split_message(data, message_len, &nonce_t, &ciphertext_t, &chipertext_len_t, &tag_t);
 
 #ifdef __MACH__
     printf("Nonce: ");
     for (size_t i = 0; i < sizeof(nonce); ++i) {
-        printf("%02x ", nonce[i]);
+        printf("%02x ", nonce_t[i]);
     }
-    printf("Ciphertext: ");
+    printf("\nCiphertext: ");
     for (size_t i = 0; i < sizeof(ciphertext); i++) {
-        printf("%02x ", ciphertext[i]);
+        printf("%02x ", ciphertext_t[i]);
     }
-
+	printf("\nTag: ");
     for (size_t i = 0; i < sizeof(tag); i++) {
-        printf("%02x ", tag[i]);
+        printf("%02x ", tag_t[i]);
     }
     printf("\n");
 #endif
 
-    if (decrypt_chacha20_poly1305(ciphertext, sizeof(ciphertext), decrypted, tag) == 0) {
+    if (decrypt_chacha20_poly1305(ciphertext_t, chipertext_len_t, decrypted, tag_t, nonce_t) == 0) {
         printf("Decrypted: %s\n", decrypted);
     } else {
         printf("Decryption failed!\n");
