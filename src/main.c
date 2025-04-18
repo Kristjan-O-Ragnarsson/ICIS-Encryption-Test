@@ -163,9 +163,10 @@ int main() {
     }
     printf("\n");
 	#endif
-	timespec_get(&start_decrypt, TIME_UTC);
+
     combine_message(nonce, sizeof(nonce), ciphertext, plaintext_len, tag, sizeof(tag), &message, &message_len);
 	timespec_get(&end_encrypt, TIME_UTC);
+    timespec_get(&start_decrypt, TIME_UTC);
 	char arr[60];
     sprintf(arr, "./text/%zu.bin", plaintext_len);
     /*
