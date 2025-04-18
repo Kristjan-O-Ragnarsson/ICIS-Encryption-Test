@@ -165,6 +165,7 @@ int main() {
 	#endif
 
     combine_message(nonce, sizeof(nonce), ciphertext, plaintext_len, tag, sizeof(tag), &message, &message_len);
+
 	timespec_get(&end_encrypt, TIME_UTC);
     timespec_get(&start_decrypt, TIME_UTC);
 	char arr[60];
@@ -208,7 +209,7 @@ int main() {
 
     printf("\n");
     printf("Data: ");
-    for (size_t i = 0; i < message_len; i++) {
+    for (size_t i = 0; i < bytes_read; i++) {
       printf("%02x ", data[i]);
     }
 
@@ -219,7 +220,7 @@ int main() {
     unsigned char *nonce_t = NULL;
     unsigned char *ciphertext_t = NULL;
     size_t chipertext_len_t;
-    split_message(data, message_len, &nonce_t, &ciphertext_t, &chipertext_len_t, &tag_t);
+    split_message(data, bytes_read, &nonce_t, &ciphertext_t, &chipertext_len_t, &tag_t);
 
 #ifdef __MACH__
     printf("Nonce: ");
