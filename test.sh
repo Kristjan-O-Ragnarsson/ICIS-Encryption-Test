@@ -20,9 +20,9 @@ for i in {28,56,112,224}; do
   #file="./results/$i/$results"
   echo "Plaintext: $i Byte"
   #echo "Encryption_Decryption" >> "$file"
-  mkdir "results/$i"
+  #mkdir "results/$i"
   #OUTPUT="$(perf stat ./$en_bin < ./text/28.txt)"
-  perf stat ./$en_bin < ./text/28.txt
+  perf stat ./$en_bin < "./text/$i.txt"
   #$OUTPUT >> "$file"
   #$OUTPUT | grep "task-clock"
 done
