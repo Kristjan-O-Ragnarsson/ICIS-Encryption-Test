@@ -2,6 +2,14 @@
 
 cd wolfssl || exit
 
+
+#do conditional clean with flag
+git clean -dfx
+
+./autogen.sh
+# = = = = = = = = = = = = = = =
+
+
 if [[ -e "$(pwd)/user_settings.h" ]] ; then
   echo "user_settings.h Already exists"
 else
