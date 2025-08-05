@@ -28,3 +28,49 @@ A test script (test.sh) is provided to benchmark performance using `perf`. It is
 ```bash
 ./test.sh
 ```
+
+
+# NAME ??
+
+is used to test encryption performance of ChaCha20-Poly1305 implementation in WolfSSl
+* Results??  
+
+## Installation
+
+This project requires:
+- `linux-perf`
+- `WolfSSL`
+
+### Building WolfSSL
+
+Requirements 
+- `git`
+
+```shell
+git submodulte init
+
+cd wolfssl
+```
+optional: remove unused functionality
+```shell
+wget
+```
+
+```shell
+./configure
+
+make
+```
+
+## Usage
+```shell
+./test.sh
+```
+or
+```shell
+ perf stat ./ICIS_Encryption < "./text/[28,56,112,224].txt"
+ 
+ /usr/bin/time -v ./ICIS_Encryption < ./text[28,56,112,224].txt
+```
+
+
