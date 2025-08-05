@@ -45,6 +45,9 @@ This project requires:
 
 Requirements 
 - `git`
+- ``make``
+- ``autoconf``
+- ``libtool``
 
 ```shell
 git submodulte init
@@ -57,6 +60,8 @@ wget
 ```
 
 ```shell
+
+
 ./configure
 
 make
@@ -72,5 +77,10 @@ or
  
  /usr/bin/time -v ./ICIS_Encryption < ./text[28,56,112,224].txt
 ```
+
+
+
+
+Tested on ubuntu and raspbian
 
 
