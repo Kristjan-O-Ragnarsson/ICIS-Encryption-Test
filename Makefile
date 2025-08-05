@@ -5,10 +5,10 @@ CFLAGS = -Wall -g
 
 # Mode selection: 'custom' uses a local build, 'system' uses installed WolfSSL
 MODE ?= system
-
+ M
 ifeq ($(MODE), custom)
-    WOLFSSL_INC = /home/kor/Documents/wolfssl/
-    WOLFSSL_LIB = /home/kor/Documents/wolfssl/src/.libs
+    WOLFSSL_INC = ./wolfssl/ #/home/kor/Documents/wolfssl/
+    WOLFSSL_LIB = ./wolfssl/src/.libs #/home/kor/Documents/wolfssl/src/.libs
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S), Darwin)
