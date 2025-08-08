@@ -149,19 +149,19 @@ int main() {
 
     encrypt_chacha20_poly1305(plaintext, plaintext_len, ciphertext, tag, nonce);
 	#ifdef __MACH__
-    printf("Nonce: ");
-    for (size_t i = 0; i < sizeof(nonce); ++i) {
-      printf("%02x ", nonce[i]);
-    }
-    printf("\nCiphertext: ");
-    for (size_t i = 0; i < sizeof(ciphertext); i++) {
-        printf("%02x ", ciphertext[i]);
-    }
-	printf("\nTag: ");
-    for (size_t i = 0; i < sizeof(tag); i++) {
-      printf("%02x ", tag[i]);
-    }
-    printf("\n");
+//    printf("Nonce: ");
+//    for (size_t i = 0; i < sizeof(nonce); ++i) {
+//      printf("%02x ", nonce[i]);
+//    }
+//    printf("\nCiphertext: ");
+//    for (size_t i = 0; i < sizeof(ciphertext); i++) {
+//        printf("%02x ", ciphertext[i]);
+//    }
+//	printf("\nTag: ");
+//    for (size_t i = 0; i < sizeof(tag); i++) {
+//      printf("%02x ", tag[i]);
+//    }
+//    printf("\n");
 	#endif
 
     combine_message(nonce, sizeof(nonce), ciphertext, plaintext_len, tag, sizeof(tag), &message, &message_len);
@@ -202,18 +202,18 @@ int main() {
 
 
 #ifdef __MACH__
-    printf("Message: ");
-    for (size_t i = 0; i < message_len; i++) {
-      printf("%02x ", message[i]);
-    }
-
-    printf("\n");
-    printf("Data: ");
-    for (size_t i = 0; i < bytes_read; i++) {
-      printf("%02x ", data[i]);
-    }
-
-    printf("\n");
+//    printf("Message: ");
+//    for (size_t i = 0; i < message_len; i++) {
+//      printf("%02x ", message[i]);
+//    }
+//
+//    printf("\n");
+//    printf("Data: ");
+//    for (size_t i = 0; i < bytes_read; i++) {
+//      printf("%02x ", data[i]);
+//    }
+//
+//    printf("\n");
 #endif
 
     unsigned char *tag_t = NULL;
@@ -223,23 +223,25 @@ int main() {
     split_message(data, bytes_read, &nonce_t, &ciphertext_t, &chipertext_len_t, &tag_t);
 
 #ifdef __MACH__
-    printf("Nonce: ");
-    for (size_t i = 0; i < sizeof(nonce); ++i) {
-        printf("%02x ", nonce_t[i]);
-    }
-    printf("\nCiphertext: ");
-    for (size_t i = 0; i < sizeof(ciphertext); i++) {
-        printf("%02x ", ciphertext_t[i]);
-    }
-	printf("\nTag: ");
-    for (size_t i = 0; i < sizeof(tag); i++) {
-        printf("%02x ", tag_t[i]);
-    }
-    printf("\n");
+//    printf("Nonce: ");
+//    for (size_t i = 0; i < sizeof(nonce); ++i) {
+//        printf("%02x ", nonce_t[i]);
+//    }
+//    printf("\nCiphertext: ");
+//    for (size_t i = 0; i < sizeof(ciphertext); i++) {
+//        printf("%02x ", ciphertext_t[i]);
+//    }
+//	printf("\nTag: ");
+//    for (size_t i = 0; i < sizeof(tag); i++) {
+//        printf("%02x ", tag_t[i]);
+//    }
+//    printf("\n");
 #endif
 
     if (decrypt_chacha20_poly1305(ciphertext_t, chipertext_len_t, decrypted, tag_t, nonce_t) == 0) {
+        decrypted[chipertext_len_t] = '\0'; // required for linux as memory can be initialized with data
         printf("Decrypted: %s\n", decrypted);
+
     } else {
         printf("Decryption failed!\n");
     }
