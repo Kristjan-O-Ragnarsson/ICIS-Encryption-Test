@@ -52,7 +52,11 @@ Requirements
 ```shell
 git submodulte init
 
+git submodule update
+
 cd wolfssl
+
+git checkout 1c56a2674a5ef51c
 ```
 optional: remove unused functionality
 ```shell
