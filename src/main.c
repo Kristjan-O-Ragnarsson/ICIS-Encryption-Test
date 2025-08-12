@@ -143,7 +143,9 @@ int main() {
           plaintext = (const unsigned char *)buffer;
 
     }
+#ifdef __MACH__
     fprintf(stderr, "plaintext is %s\n", plaintext);
+#endif
     unsigned char ciphertext[plaintext_len];
     unsigned char decrypted[plaintext_len];
 
@@ -240,7 +242,9 @@ int main() {
 
     if (decrypt_chacha20_poly1305(ciphertext_t, chipertext_len_t, decrypted, tag_t, nonce_t) == 0) {
         decrypted[chipertext_len_t] = '\0'; // required for linux as memory can be initialized with data
+#ifdef __MACH__
         printf("Decrypted: %s\n", decrypted);
+#endif
 
     } else {
         printf("Decryption failed!\n");
