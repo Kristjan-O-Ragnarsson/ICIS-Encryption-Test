@@ -16,6 +16,10 @@
 #include <stdlib.h>
 #endif
 
+#define __TESTING__
+
+#undef __TESTING__
+
 #define KEY_SIZE 32
 #define NONCE_SIZE 12
 #define TAG_SIZE 16
@@ -136,14 +140,14 @@ int main() {
           perror("fgets failed");
 	} else{
           plaintext_len = strlen(buffer);
-          #ifdef __MACH__
+          #ifdef __TESTING__
           printf("plaintext length: %zu\n", plaintext_len);
           #endif
           buffer[plaintext_len] = '\0';
           plaintext = (const unsigned char *)buffer;
 
     }
-#ifdef __MACH__
+#ifdef __TESTING__
     fprintf(stderr, "plaintext is %s\n", plaintext);
 #endif
     unsigned char ciphertext[plaintext_len];
@@ -242,7 +246,7 @@ int main() {
 
     if (decrypt_chacha20_poly1305(ciphertext_t, chipertext_len_t, decrypted, tag_t, nonce_t) == 0) {
         decrypted[chipertext_len_t] = '\0'; // required for linux as memory can be initialized with data
-#ifdef __MACH__
+#ifdef __TESTING__
         printf("Decrypted: %s\n", decrypted);
 #endif
 
@@ -250,10 +254,19 @@ int main() {
         printf("Decryption failed!\n");
     }
 	timespec_get(&end, TIME_UTC);
+#ifdef __TESTING__
     printf("Encrypt/Decrytp/Random time: %ld\n", end.tv_nsec - start.tv_nsec);
     printf("Random time: %ld\n", end_random.tv_nsec - start.tv_nsec);
     printf("Encrypt time: %ld\n", end_encrypt.tv_nsec - end_random.tv_nsec);
     printf("Decrypt time: %ld\n", end.tv_nsec - start_decrypt.tv_nsec);
+#endif
+
+#ifndef __TESTING__
+    printf("%ld,%ld,%ld,%ld\n", end.tv_nsec - start.tv_nsec, end_random.tv_nsec - start.tv_nsec, end_encrypt.tv_nsec - end_random.tv_nsec, end.tv_nsec - start_decrypt.tv_nsec);
+    //printf("%ld\n", end_random.tv_nsec - start.tv_nsec);
+    //printf("%ld\n", end_encrypt.tv_nsec - end_random.tv_nsec);
+    //printf("%ld\n", end.tv_nsec - start_decrypt.tv_nsec);
+#endif
 
     return 0;
 }
