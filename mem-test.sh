@@ -21,7 +21,7 @@ for i in {28,56,112,224}; do
     echo "Run $j" | tee -a "$results"
     OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2> /dev/shm/timebuf)
 
-    echo "$OUTPUT" | tee -a "$results"
+    #echo "$OUTPUT" | tee -a "$results"
     cat /dev/shm/timebuf
 
 
