@@ -13,7 +13,7 @@ echo "$HOSTNAME Memory test" | tee -a "$results"
 uname -svrm | tee -a "$results"
 
 
-
+mkfifo /dev/shm/timepipe
 
 for i in {28,56,112,224}; do
   echo "Memory: $i Byte" | tee -a "$results"
@@ -21,11 +21,11 @@ for i in {28,56,112,224}; do
 
   for j in $(seq 1 "$nr_runs"); do
     echo "Run $j" | tee -a "$results"
-    OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null)
-    MAX_RSS=$(/bin/time -v ./$en_bin < "./text/$i.txt" > /dev/null 2>&1 1>/dev/null | grep 'Maximum resident set size' | awk '{print $6}')
+    OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2> /dev/shm/timepipe)
 
     echo "$OUTPUT" | tee -a "$results"
-    echo "$MAX_RSS"
+    cat /dev/shm/timepipe
+
 
 #    func=$(echo "$OUTPUT" | cut -d "," -f 1)
 #    sum_func=$((sum_func+func))
