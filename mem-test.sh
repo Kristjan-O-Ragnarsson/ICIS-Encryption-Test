@@ -13,18 +13,16 @@ echo "$HOSTNAME Memory test" | tee -a "$results"
 uname -svrm | tee -a "$results"
 
 
-mkfifo /dev/shm/timepipe
-
 for i in {28,56,112,224}; do
   echo "Memory: $i Byte" | tee -a "$results"
   sum_mem=0
 
   for j in $(seq 1 "$nr_runs"); do
     echo "Run $j" | tee -a "$results"
-    OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2> /dev/shm/timepipe)
+    OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2> /dev/shm/timebuf)
 
     echo "$OUTPUT" | tee -a "$results"
-    cat /dev/shm/timepipe
+    cat /dev/shm/timebuf
 
 
 #    func=$(echo "$OUTPUT" | cut -d "," -f 1)
