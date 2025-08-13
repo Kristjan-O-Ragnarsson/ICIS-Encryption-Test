@@ -21,7 +21,7 @@ for i in {28,56,112,224}; do
 
   for j in $(seq 1 "$nr_runs"); do
     echo "Run $j" | tee -a "$results"
-    OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null )
+    OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2>&1)
 
     echo "$OUTPUT" | grep Maximum | tee -a "$results"
 
