@@ -22,7 +22,7 @@ for i in {28,56,112,224}; do
     OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2> /dev/shm/timebuf)
 
     #echo "$OUTPUT" | tee -a "$results"
-    cat /dev/shm/timebuf
+    cat /dev/shm/timebuf | grep 'Maximum resident set size' | awk '{print $6}'
 
 
 #    func=$(echo "$OUTPUT" | cut -d "," -f 1)
