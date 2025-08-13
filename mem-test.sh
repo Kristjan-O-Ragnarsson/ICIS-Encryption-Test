@@ -22,7 +22,9 @@ for i in {28,56,112,224}; do
     OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2> /dev/shm/timebuf)
 
     #echo "$OUTPUT" | tee -a "$results"
-    cat /dev/shm/timebuf | grep 'Maximum resident set size' | awk '{print $6}'
+    mem=$(cat /dev/shm/timebuf | grep 'Maximum resident set size' | awk '{print $6}')
+    sum_mem=$((sum_mem+mem))
+    echo "$mem" | tee -a "$results"
 
 
 #    func=$(echo "$OUTPUT" | cut -d "," -f 1)
@@ -45,11 +47,11 @@ for i in {28,56,112,224}; do
 
   done
 
-  #avg_mem=$((sum_mem / nr_runs))
+  avg_mem=$((sum_mem / nr_runs))
 
 
-  #echo "AVG over $nr_runs runs" | tee -a "$results"
-  #echo "functional: $avg_mem" | tee -a "$results"
+  echo "AVG over $nr_runs runs" | tee -a "$results"
+  echo "functional: $avg_mem" | tee -a "$results"
 
 
 done
