@@ -1,10 +1,11 @@
 #!/bin/bash
 
 datetime=$(date -Iminutes)
-results="mem-test-$datetime.txt"
+results="results/mem-test-$datetime.txt"
 en_bin=ICIS_Encryption
 nr_runs=7
 
+mkdir "results" > /dev/null
 
 touch "$results"
 
@@ -14,7 +15,7 @@ uname -svrm | tee -a "$results"
 
 
 for i in {28,56,112,224}; do
-  echo "Memory: $i Byte" | tee -a "$results"
+  echo "Message: $i Byte" | tee -a "$results"
   sum_mem=0
 
   for j in $(seq 1 "$nr_runs"); do
@@ -51,7 +52,7 @@ for i in {28,56,112,224}; do
 
 
   echo "AVG over $nr_runs runs" | tee -a "$results"
-  echo "functional: $avg_mem" | tee -a "$results"
+  echo "memory: $avg_mem" | tee -a "$results"
 
 
 done

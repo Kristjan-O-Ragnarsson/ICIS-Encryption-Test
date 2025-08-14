@@ -1,9 +1,10 @@
 #!/bin/bash
 datetime=$(date -Iminutes)
-results="test-$datetime.txt"
+results="results/test-$datetime.txt"
 en_bin=ICIS_Encryption
 nr_runs=7
 
+mkdir "results" > /dev/null
 echo "$results"
 
 touch "$results"
@@ -23,7 +24,7 @@ uname -svrm | tee -a "$results"
 
 echo "Timing test" | tee -a "$results"
 for i in {28,56,112,224}; do
-  echo "Timing: $i Byte" | tee -a "$results"
+  echo "Message: $i Byte" | tee -a "$results"
   sum_func=0
   sum_rand=0
   sum_encr=0
