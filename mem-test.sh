@@ -19,14 +19,15 @@ for i in {28,56,112,224}; do
   sum_mem=0
 
   for j in $(seq 1 "$nr_runs"); do
-    echo "Run $j" | tee -a "$results"
+
     OUTPUT=$(cat "./text/$i.txt" | /bin/time -v ./$en_bin  > /dev/null 2> /dev/shm/timebuf)
 
     #echo "$OUTPUT" | tee -a "$results"
     mem=$(cat /dev/shm/timebuf | grep 'Maximum resident set size' | awk '{print $6}')
     sum_mem=$((sum_mem+mem))
-    echo "$mem" | tee -a "$results"
+    #echo "$mem" | tee -a "$results"
 
+    echo "Run $j: $mem (kbytes)" | tee -a "$results"
 
 #    func=$(echo "$OUTPUT" | cut -d "," -f 1)
 #    sum_func=$((sum_func+func))
@@ -52,7 +53,7 @@ for i in {28,56,112,224}; do
 
 
   echo "AVG over $nr_runs runs" | tee -a "$results"
-  echo "memory: $avg_mem" | tee -a "$results"
+  echo "memory: $avg_mem (kbytes)" | tee -a "$results"
 
 
 done
