@@ -29,13 +29,12 @@ for i in {28,56,112,224}; do
   sum_rand=0
   sum_encr=0
   sum_decr=0
-  sum_total=0
 
   for j in $(seq 1 "$nr_runs"); do
     echo "Run $j" | tee -a "$results"
     OUTPUT=$(perf stat ./$en_bin < "./text/$i.txt" 2> /dev/shm/totaltimebuf)
 
-    grep task-clock </dev/shm/totaltimebuf
+    grep task-clock </dev/shm/totaltimebuf | xargs
 
     echo "$OUTPUT" | tee -a "$results"
 
@@ -74,6 +73,5 @@ for i in {28,56,112,224}; do
   echo "random: $avg_rand" | tee -a "$results"
   echo "encryption: $avg_encr" | tee -a "$results"
   echo "Decryption: $avg_decr" | tee -a "$results"
-  echo "Total: $avg_total" | tee -a "$results"
 
 done
