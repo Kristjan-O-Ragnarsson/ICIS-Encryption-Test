@@ -57,8 +57,8 @@ for i in {28,56,112,224}; do
     sum_decr=$((sum_decr+decr))
     echo "$decr" | tee -a "$results"
 
-    total=$(grep task-clock </dev/shm/totaltimebuf | xargs | cut -d " " -f 1)
-    sum_total=$((sum_total+total))
+    #total=$(grep task-clock </dev/shm/totaltimebuf | xargs | cut -d " " -f 1)
+    #sum_total=$((sum_total+total))
 
 
   done
@@ -67,7 +67,7 @@ for i in {28,56,112,224}; do
   avg_rand=$((sum_rand / nr_runs))
   avg_encr=$((sum_encr / nr_runs))
   avg_decr=$((sum_decr / nr_runs))
-  avg_total=$((sum_total / nr_runs))
+  #avg_total=$((sum_total / nr_runs))
 
   echo "AVG over $nr_runs runs" | tee -a "$results"
   echo "functional: $avg_func" | tee -a "$results"
