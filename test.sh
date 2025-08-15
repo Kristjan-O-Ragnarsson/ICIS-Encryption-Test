@@ -29,10 +29,13 @@ for i in {28,56,112,224}; do
   sum_rand=0
   sum_encr=0
   sum_decr=0
+  sum_total=0
 
   for j in $(seq 1 "$nr_runs"); do
     echo "Run $j" | tee -a "$results"
-    OUTPUT=$(./$en_bin < "./text/$i.txt")
+    OUTPUT=$(perf stat ./$en_bin < "./text/$i.txt" 2> /dev/shm/totaltimebuf)
+
+    grep task-clock </dev/shm/totaltimebuf
 
     echo "$OUTPUT" | tee -a "$results"
 
@@ -54,17 +57,23 @@ for i in {28,56,112,224}; do
     sum_decr=$((sum_decr+decr))
     echo "$decr" | tee -a "$results"
 
+    total=$(grep task-clock </dev/shm/totaltimebuf | xargs | cut -d " " -f 1)
+    sum_total=$((sum_total+total))
+
+
   done
 
   avg_func=$((sum_func / nr_runs))
   avg_rand=$((sum_rand / nr_runs))
   avg_encr=$((sum_encr / nr_runs))
   avg_decr=$((sum_decr / nr_runs))
+  avg_total=$((sum_total / nr_runs))
 
   echo "AVG over $nr_runs runs" | tee -a "$results"
   echo "functional: $avg_func" | tee -a "$results"
   echo "random: $avg_rand" | tee -a "$results"
   echo "encryption: $avg_encr" | tee -a "$results"
   echo "Decryption: $avg_decr" | tee -a "$results"
+  echo "Total: $avg_total" | tee -a "$results"
 
 done

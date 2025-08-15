@@ -6,10 +6,10 @@ en_bin=ICIS_Encryption
 
 
 
-OUTPUT=$(perf stat ./$en_bin < "./text/$1.txt" 2> /dev/shm/timebuf)
+OUTPUT=$(perf stat ./$en_bin < "./text/$1.txt" 2> /dev/shm/totaltimebuf)
 
 echo "$OUTPUT"
-cat /dev/shm/timebuf | grep task-clock
+cat /dev/shm/totaltimebuf | grep task-clock
 
 #i=56
 
