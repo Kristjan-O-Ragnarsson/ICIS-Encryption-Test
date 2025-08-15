@@ -6,7 +6,7 @@ en_bin=ICIS_Encryption
 
 
 
-OUTPUT=$(./$en_bin < "./text/$1.txt")
+OUTPUT=$(perf stat ./$en_bin < "./text/$1.txt")
 
 echo "$OUTPUT"
 
