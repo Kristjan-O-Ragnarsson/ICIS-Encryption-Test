@@ -4,6 +4,8 @@ results="results/test-$datetime.txt"
 en_bin=ICIS_Encryption
 nr_runs=7
 
+tty
+
 mkdir "results" > /dev/null
 echo "$results"
 
