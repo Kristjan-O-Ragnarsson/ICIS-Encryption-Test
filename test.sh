@@ -36,7 +36,7 @@ for i in {28,56,112,224}; do
     echo "Run $j" | tee -a "$results"
     OUTPUT=$(perf stat ./$en_bin < "./text/$i.txt" 2> /dev/shm/totaltimebuf)
 
-    grep task-clock </dev/shm/totaltimebuf | xargs
+    grep task-clock </dev/shm/totaltimebuf | xargs | tee -a "$results"
 
     echo "$OUTPUT" | tee -a "$results"
 
